@@ -1,0 +1,170 @@
+package Graph_problem;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class ACM_CONTEST_BLACKOUT {
+
+	public static p2 pp[], pp2[];
+	public static int id[], count;
+	public static boolean[] map;
+	public static ArrayList<Integer> arr;
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+		int t = in.nextInt();
+		while (t-- > 0) {
+			int n = in.nextInt();
+			int m = in.nextInt();
+			pp = new p2[m];
+			pp2 = new p2[m];
+			id = new int[n + 1];
+			for (int i = 0; i <= n; i++) {
+				id[i] = i;
+			}
+
+			for (int i = 0; i < m; i++) {
+				pp[i] = new p2();
+				pp2[i] = new p2();
+				int x = in.nextInt();
+				int y = in.nextInt();
+				int w = in.nextInt();
+				pp[i].w = w;
+				pair p = new pair(x, y);
+				pp[i].pair = p;
+				pp2[i].w = w;
+				pair p2 = new pair(x, y);
+				pp2[i].pair = p2;
+
+			}
+			arr = new ArrayList<>();
+
+			Arrays.sort(pp);
+			Arrays.sort(pp2);
+
+			System.out.print(Kruskal() + " ");
+			int ans2 = 0;
+			// System.out.println(arr.size());
+			for (int i = 0; i < arr.size(); i++) {
+
+				for (int j = 0; j < id.length; j++) {
+					id[j] = j;
+				}
+				count = 0;
+				pp[arr.get(i)] = null;
+				int help = Kruskal2();
+				if (ans2 == 0 && count == n - 1) {
+					ans2 = help;
+				} else {
+					if (count == n - 1)
+						ans2 = Math.min(ans2, help);
+				}
+
+				pp[arr.get(i)] = pp2[arr.get(i)];
+				// System.out.print(ans2 + " ");
+
+			}
+			System.out.println(ans2);
+		}
+
+	}
+
+	public static int root(int x) {
+		while (id[x] != x) {
+			id[x] = id[id[x]];
+			x = id[x];
+		}
+		return x;
+	}
+
+	public static void union1(int x, int y) {
+		int p = root(x);
+		int q = root(y);
+		id[p] = id[q];
+	}
+
+	public static int Kruskal() {
+
+		int x;
+		int y;
+		int mincost = 0;
+		int cost = 0;
+
+		int ind = 0;
+		for (int i = 0; i < pp.length; i++) {
+
+			x = pp[i].pair.e;
+			y = pp[i].pair.w;
+			cost = pp[i].w;
+			// System.out.println(x+" "+y);
+
+			if (root(x) != root(y)) {
+				mincost += cost;
+				arr.add(i);
+				union1(x, y);
+			}
+		}
+
+		return mincost;
+	}
+
+	public static int Kruskal2() {
+
+		int x;
+		int y;
+		int mincost = 0;
+		int cost = 0;
+
+		int ind = 0;
+		for (int i = 0; i < pp.length; i++) {
+			if (pp[i] != null) {
+				x = pp[i].pair.e;
+				y = pp[i].pair.w;
+				cost = pp[i].w;
+
+				if (root(x) != root(y)) {
+					mincost += cost;
+					count++;
+					union1(x, y);
+				}
+			}
+		}
+
+		return mincost;
+	}
+
+	public static class p2 implements Comparable<p2> {
+		int w;
+		pair pair;
+
+		p2(int w, pair p) {
+			this.w = w;
+			this.pair = p;
+		}
+
+		p2() {
+
+		}
+
+		@Override
+		public int compareTo(p2 o) {
+			return this.w - o.w;
+		}
+	}
+
+	public static class pair {
+		int e;
+		int w;
+
+		pair(int e, int w) {
+
+			this.e = e;
+			this.w = w;
+
+		}
+	}
+
+}
