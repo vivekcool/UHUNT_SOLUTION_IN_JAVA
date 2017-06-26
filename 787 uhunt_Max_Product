@@ -1,0 +1,33 @@
+import java.io.*;
+import java.util.Scanner;
+import java.math.BigInteger;
+public class Main
+{
+    public static void main(String args[])throws Exception
+    {
+        Scanner s = new Scanner(System.in);
+        while(s.hasNext())
+        {
+            int i=0,j;
+            int arr[] = new int[102];
+            do
+            {
+                arr[i]=s.nextInt();
+                i++;                
+            }while(arr[i-1]!=-999999);
+            int len=i-1;
+            BigInteger max=BigInteger.valueOf(arr[0]);          
+            for(i=0;i<len;i++)
+            {
+                BigInteger cur=BigInteger.valueOf(arr[i]);          
+                max=cur.max(max);
+                for(j=i+1;j<len;j++)
+                {
+                    cur=cur.multiply(BigInteger.valueOf(arr[j]));
+                    max=cur.max(max);
+                }               
+            }
+            System.out.println(max);            
+        }   
+    }
+}
